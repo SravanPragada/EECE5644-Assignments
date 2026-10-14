@@ -1,4 +1,3 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import multivariate_normal
@@ -21,7 +20,7 @@ C1 = np.array([[1, 0.3, -0.2, 0],
                [-0.2, 0.3, 1, 0],
                [0, 0, 0, 3]])
 
-rng = np.random.default_rng(1)
+rng = np.random.default_rng(2026)
 
 # pick labels: 1 with prob 0.65, 0 with prob 0.35
 labels = (rng.random(N) >= p0).astype(int)
