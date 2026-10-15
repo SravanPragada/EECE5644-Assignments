@@ -11,12 +11,11 @@
 #   !unzip -o -q har.zip
 #   !unzip -o -q "UCI HAR Dataset.zip"
 
-# EECE5644 Assignment 1 - Question 3
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import multivariate_normal
 
-alpha = 0.05   # for lambda = alpha * trace(C) / rank(C)
+alpha = 0.05 
 
 
 def load_wine():
@@ -29,12 +28,11 @@ def load_har():
     ytr = np.loadtxt("UCI HAR Dataset/train/y_train.txt").astype(int)
     Xte = np.loadtxt("UCI HAR Dataset/test/X_test.txt")
     yte = np.loadtxt("UCI HAR Dataset/test/y_test.txt").astype(int)
-    # use all samples (train + test)
+
     return np.vstack([Xtr, Xte]), np.concatenate([ytr, yte])
 
 
 def standardize(X):
-    # make every feature zero mean and unit variance
     mu = X.mean(axis=0)
     sd = X.std(axis=0)
     sd[sd == 0] = 1
@@ -49,7 +47,7 @@ def train(X, y):
         mu = np.mean(Xc, axis=0)
         C = np.cov(Xc.T)
         lam = alpha * np.trace(C) / np.linalg.matrix_rank(C)
-        C = C + lam * np.eye(X.shape[1])   # regularize
+        C = C + lam * np.eye(X.shape[1]) 
         means.append(mu)
         covs.append(C)
         priors.append(len(Xc) / len(X))
@@ -58,7 +56,7 @@ def train(X, y):
 
 
 def classify(X, classes, means, covs, priors):
-    # MAP rule: pick class with largest log p(x|c) + log P(c)
+
     scores = np.zeros((len(X), len(classes)))
     for k in range(len(classes)):
         scores[:, k] = multivariate_normal.logpdf(X, means[k], covs[k]) + np.log(priors[k])
@@ -69,12 +67,12 @@ def confusion(y, dec, classes):
     CM = np.zeros((len(classes), len(classes)))
     for j in range(len(classes)):
         for i in range(len(classes)):
-            CM[i, j] = np.mean(dec[y == classes[j]] == classes[i])   # P(D=i|L=j)
+            CM[i, j] = np.mean(dec[y == classes[j]] == classes[i])
     return CM
 
 
 def pca_plot(X, y, name):
-    # PCA using the eigenvectors of the covariance matrix
+
     Xc = X - X.mean(axis=0)
     evals, evecs = np.linalg.eigh(np.cov(Xc.T))
     order = np.argsort(evals)[::-1]
@@ -108,14 +106,14 @@ def run(name, X, y):
     pca_plot(X, y, name)
 
 
-# ---------- main results (alpha = 0.05) ----------
+
 Xw, yw = load_wine()
 run("Wine", Xw, yw)
 
 Xh, yh = load_har()
 run("HAR", Xh, yh)
 
-# ---------- check how much alpha matters ----------
+
 print("\n===== alpha check =====")
 for a in [0.001, 0.01, 0.05, 0.1]:
     alpha = a
