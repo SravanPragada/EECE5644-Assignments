@@ -4,7 +4,7 @@ from sklearn.mixture import GaussianMixture
 
 rng = np.random.default_rng(2065)
 
-weights = np.array([0.3, 0.2, 0.3, 0.2])
+weights = np.array([0.35, 0.15, 0.30, 0.20])
 means = np.array([[0, 0], [1.6, 1.0], [6, 0], [2, 6]], float)
 covs = [np.array([[1.0, 0.3], [0.3, 0.8]]),
         np.array([[0.8, -0.2], [-0.2, 1.2]]),
